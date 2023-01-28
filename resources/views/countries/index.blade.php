@@ -26,12 +26,21 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1>Countries</h1>
+                <h1><i class="bi bi-flag-fill"></i>&nbsp;Countries</h1>
                 <div class="card mb-3">
                     <div class="card-header">
                         Use the fields bellow to search
                     </div>
                     <div class="card-body">
+                        @if (!empty($countries['errors']))
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($countries['errors'] as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                         <div class="container">
                             <form class="row g-3" method="GET" id="frmPrincipal">
                                 <input type="hidden" name="limit" id="inpLimit" value="{{request('limit')}}">
@@ -55,15 +64,6 @@
                         </div>
                     </div>
                 </div>
-                @if (!empty($countries['errors']))
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($countries['errors'] as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
                 <div class="card">
                     <div class="card-body p-0">
                         <table class="table table-striped table-hover">

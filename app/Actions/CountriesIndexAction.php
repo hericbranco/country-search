@@ -3,8 +3,11 @@
 namespace App\Actions;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Collection;
+use Illuminate\Http\Client\Response;
 use Throwable;
 
 class CountriesIndexAction
@@ -37,7 +40,6 @@ class CountriesIndexAction
             }
 
             $http = Http::get('https://api.first.org/data/v1/countries', $data);
-
             $countries = collect($http->object()->data);
             $queryString = array_map(function ($value, $key) {
                 return $key . '=' . $value;
@@ -57,7 +59,7 @@ class CountriesIndexAction
         } catch (ValidationException $v) {
             return responseFail($v->getMessage(), $v->errorBag->all());
         } catch (Throwable $t) {
-            dd($t->getMessage(), $t->getLine());
+            Log::critical($t->getMessage());
             return responseFail($t->getMessage(), []);
         }
     }
