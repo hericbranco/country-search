@@ -9,7 +9,7 @@ class CountriesController extends Controller
 {
     public function index(CountriesIndexAction $countriesIndexAction) 
     {
-        $countries = $countriesIndexAction(request()->all());
+        $countries = $countriesIndexAction(request()->all(['q', 'region', 'page', 'limit']));
         return view('countries.index', ['countries' => $countries]);
     }
 }
