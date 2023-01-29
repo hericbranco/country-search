@@ -19,6 +19,18 @@
         .slc-limit {
             width: 90px;
         }
+
+        .flag {
+            width: 150px;
+        }
+
+        .flagTh {
+            width: 160px;
+        }
+
+        .table tr td {
+            vertical-align: middle;
+        }
     </style>
 </head>
 
@@ -58,6 +70,14 @@
                                     </select>
                                 </div>
                                 <div class="col-auto">
+                                    <label for="with_flag" class="visually-hidden">With Flag?</label>
+                                    <select class="form-select" name="with_flag">
+                                        @foreach (['Without Flags', 'With Flags'] as $option)
+                                        <option {{(request('with_flag') == $option)?'selected':''}}>{{$option}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-auto">
                                     <button type="submit" class="btn btn-primary mb-3"><i class="bi bi-search"></i>&nbsp;Search</button>
                                 </div>
                             </form>
@@ -68,12 +88,18 @@
                     <div class="card-body p-0">
                         <table class="table table-striped table-hover">
                             <tr>
+                                @if (request('with_flag') == 'With Flags')
+                                <th class="flagTh">Flag</th>
+                                @endif
                                 <th>Code</th>
                                 <th>Country</th>
                                 <th>Region</th>
                             </tr>
                             @forelse ($countries['data'] as $code => $country)
                             <tr>
+                                @if (request('with_flag') == 'With Flags')
+                                <td><img class="flag" crossorigin="anonymous" src="{{config('custom.FlagsImgUrl')}}/{{$code}}" /></td>
+                                @endif
                                 <td>{{$code}}</td>
                                 <td>{{$country->country}}</td>
                                 <td>{{$country->region}}</td>
