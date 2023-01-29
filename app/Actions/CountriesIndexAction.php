@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use Error;
+use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -37,7 +37,7 @@ class CountriesIndexAction
 
         $http = Http::get(config('custom.CountriesApiUrl'), $data);
         if (data_get($http->object(), 'status-code') != 200) {
-            throw new Error('Content not found', 404);
+            throw new NotFound('Content not found', 404);
         }
         $countries = data_get($http->object(), 'data');
         Redis::setex($stringKey, config('custom.RedisCacheTime'), serialize($countries));
