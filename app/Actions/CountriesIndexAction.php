@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Client\Response;
 use Throwable;
+use Illuminate\Support\Facades\Redis;
+
 
 class CountriesIndexAction
 {
@@ -25,6 +27,26 @@ class CountriesIndexAction
         }
     }
 
+    private function getCountries(array $data) :Collection
+    {
+        $keys = array_keys($data);
+        sort($keys);
+        $stringKey = [];
+        array_walk($keys, function($key) use (&$stringKey, $data) {
+            $stringKey[] = $key.':'.$data[$key];
+        });
+        $stringKey = implode('|', $stringKey);
+        $cached = Redis::get($stringKey);
+        if ($cached) {
+            echo 'cached';
+            return collect(json_decode($cached));
+        }
+
+        $http = Http::get('https://api.first.org/data/v1/countries', $data);
+        Redis::set($stringKey, json_encode($http->object()->data));
+        return collect($http->object()->data);
+    }
+
     public function __invoke(array $data)
     {
         try {
@@ -39,8 +61,7 @@ class CountriesIndexAction
                 $data['offset'] = ($data['page']-1)*$data['limit'];
             }
 
-            $http = Http::get('https://api.first.org/data/v1/countries', $data);
-            $countries = collect($http->object()->data);
+            $countries = $this->getCountries($data);
             $queryString = array_map(function ($value, $key) {
                 return $key . '=' . $value;
             }, request()->except('page'), array_keys(request()->except('page')));
