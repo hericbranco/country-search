@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Collection;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Redis;
 
 
@@ -31,6 +30,7 @@ class CountriesIndexAction
         $stringKey = serialize($data);
         $cached = Redis::get($stringKey);
         if ($cached) {
+            echo 'cached';
             return collect(unserialize($cached));
         }
 
@@ -44,7 +44,7 @@ class CountriesIndexAction
         $this->validateData($data);
         $data = array_merge($data, ['offset' => 0]);
         if (!$data['limit']) {
-            $data['limit'] = 15;
+            $data['limit'] = config('custom.ItemsPerPage');
         }
         if ($data['page']) {
             $data['offset'] = ($data['page'] - 1) * $data['limit'];
