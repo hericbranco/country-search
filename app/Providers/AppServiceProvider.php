@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,13 +24,13 @@ class AppServiceProvider extends ServiceProvider
         if (!Collection::hasMacro('transformToPaginatedCollection')) {
             Collection::macro(
                 'transformToPaginatedCollection',
-                function ($perPage = null, $page = null, $options = []) {
+                function (Request $request, $perPage = null, $page = null) {
                     $perPage = $perPage??config('custom.ItemsPerPage');
                     $actualPage = $page ?: (Paginator::resolveCurrentPage() ?: 1);
                     $queryString = array_map(function ($value, $key) {
                         return $key . '=' . $value;
-                    }, request()->except('page'), array_keys(request()->except('page')));
-                    $this->path = request()->url() . '?';
+                    }, $request->except('page'), array_keys($request->except('page')));
+                    $this->path = $request->url() . '?';
                     if (!empty($queryString)) {
                         $this->path = $this->path . implode('&', $queryString) . '&';
                     }

@@ -17,7 +17,7 @@ class CountriesController extends Controller
         try {
             $countries = $countriesIndexAction(request()->all(['q', 'region', 'page', 'limit']));
             $perPage = request('limit')??config('custom.ItemsPerPage');
-            return responseOk('', $countries->transformToPaginatedCollection($perPage));
+            return responseOk('', $countries->transformToPaginatedCollection($request, $perPage));
         } catch (ValidationException $v) {
             return responseFail($v->getMessage(), $v->errorBag->all());
         } catch (Throwable $t) {
