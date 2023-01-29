@@ -40,9 +40,15 @@ class CountriesIndexAction
             throw new NotFound('Content not found', 404);
         }
         $countries = data_get($http->object(), 'data');
-        Redis::setex($stringKey, config('custom.RedisCacheTime'), serialize($countries));
+        $countriesWithFlag = [];
+        array_walk($countries, function($item, $code) use(&$countriesWithFlag){
+            $countriesWithFlag[$code] = $item;
+            data_set($countriesWithFlag[$code], 'flag', config('custom.FlagsImgUrl').'/'.$code);
+        });
+        
+        Redis::setex($stringKey, config('custom.RedisCacheTime'), serialize($countriesWithFlag));
         Log::debug('Use Api to return this data, save cache', ['key' => $stringKey]);
-        return collect($countries);
+        return collect($countriesWithFlag);
     }
 
     public function __invoke(array $data)
