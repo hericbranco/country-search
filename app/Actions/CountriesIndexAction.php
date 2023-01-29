@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use Error;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -34,10 +35,14 @@ class CountriesIndexAction
             return collect(unserialize(Redis::get($stringKey)));
         }
 
-        $http = Http::get('https://api.first.org/data/v1/countries', $data);
-        Redis::setex($stringKey, config('custom.RedisCacheTime'), serialize($http->object()->data));
+        $http = Http::get(config('custom.CountriesApiUrl'), $data);
+        if (data_get($http->object(), 'status-code') != 200) {
+            throw new Error('Content not found', 404);
+        }
+        $countries = data_get($http->object(), 'data');
+        Redis::setex($stringKey, config('custom.RedisCacheTime'), serialize($countries));
         Log::debug('Use Api to return this data, save cache', ['key' => $stringKey]);
-        return collect($http->object()->data);
+        return collect($countries);
     }
 
     public function __invoke(array $data)
