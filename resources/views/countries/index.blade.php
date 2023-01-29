@@ -52,7 +52,7 @@
                                     <label for="region" class="visually-hidden">Region</label>
                                     <select class="form-select" name="region">
                                         <option value="">All</option>
-                                        @foreach (['Africa', 'Asia', 'Oceania', 'North America', 'South America'] as $region)
+                                        @foreach (['Africa', 'Asia', 'Europe', 'Oceania', 'North America', 'South America'] as $region)
                                         <option {{(request('region') == $region)?'selected':''}}>{{$region}}</option>
                                         @endforeach
                                     </select>
