@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Log;
 
 
 class CountriesIndexAction
@@ -30,12 +31,13 @@ class CountriesIndexAction
         $stringKey = serialize($data);
         $cached = Redis::get($stringKey);
         if ($cached) {
-            echo 'cached';
+            Log::debug('Use cache to return this data', ['key' => $stringKey]);
             return collect(unserialize($cached));
         }
 
         $http = Http::get('https://api.first.org/data/v1/countries', $data);
         Redis::set($stringKey, serialize($http->object()->data));
+        Log::debug('Use Api to return this data, save cache', ['key' => $stringKey]);
         return collect($http->object()->data);
     }
 
