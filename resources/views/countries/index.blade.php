@@ -54,7 +54,7 @@
                         </div>
                         @endif
                         <div class="container">
-                            <form class="row g-3" method="GET" id="frmPrincipal">
+                            <form class="row g-3 form-inline justify-content-center" method="GET" id="frmPrincipal">
                                 <input type="hidden" name="limit" id="inpLimit" value="{{request('limit')}}">
                                 <div class="col-auto">
                                     <label for="q" class="visually-hidden">Code/Country</label>
@@ -63,7 +63,7 @@
                                 <div class="col-auto">
                                     <label for="region" class="visually-hidden">Region</label>
                                     <select class="form-select" name="region">
-                                        <option value="">All</option>
+                                        <option value="">All Regions</option>
                                         @foreach (['Africa', 'Asia', 'Europe', 'Oceania', 'North America', 'South America'] as $region)
                                         <option {{(request('region') == $region)?'selected':''}}>{{$region}}</option>
                                         @endforeach
