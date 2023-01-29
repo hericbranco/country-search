@@ -2,6 +2,8 @@
 
 CountriesListSearch is a PHP(Laravel) project to show and filter countries and their flags.
 
+The project uses Redis to cache http requests to avoid slowdowns in country api calls
+
 ## Installation
 
 After clone this project enter in created folder and execute composer install
