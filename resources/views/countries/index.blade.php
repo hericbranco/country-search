@@ -38,7 +38,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1><i class="bi bi-flag-fill"></i>&nbsp;Countries</h1>
+                <h1><i class="bi bi-globe-americas"></i>&nbsp;Countries</h1>
                 <div class="card mb-3">
                     <div class="card-header">
                         Use the fields bellow to search
