@@ -29,14 +29,13 @@ class CountriesIndexAction
     {
         ksort($data);
         $stringKey = serialize($data);
-        $cached = Redis::get($stringKey);
-        if ($cached) {
+        if (Redis::exists($stringKey)) {
             Log::debug('Use cache to return this data', ['key' => $stringKey]);
-            return collect(unserialize($cached));
+            return collect(unserialize(Redis::get($stringKey)));
         }
 
         $http = Http::get('https://api.first.org/data/v1/countries', $data);
-        Redis::set($stringKey, serialize($http->object()->data));
+        Redis::setex($stringKey, config('custom.RedisCacheTime'), serialize($http->object()->data));
         Log::debug('Use Api to return this data, save cache', ['key' => $stringKey]);
         return collect($http->object()->data);
     }
