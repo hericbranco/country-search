@@ -29,15 +29,6 @@ services:
     environment:
         - NGINX_PORT=80
 
-  mongo:
-      image: mongo
-      container_name: country-search_mongodb
-      restart: always
-      environment:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: A123456
-      ports:
-          - 27017:27017
   redis:
       image: redis
       container_name: country-search_redis
