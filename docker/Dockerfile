@@ -46,3 +46,5 @@ RUN mkdir -p /home/$user/.composer && \
 WORKDIR /var/www
 
 USER $user
+
+RUN echo "Access <http://country-search.localhost> to view this project"
