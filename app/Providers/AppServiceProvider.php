@@ -30,18 +30,21 @@ class AppServiceProvider extends ServiceProvider
                     $queryString = array_map(function ($value, $key) {
                         return $key . '=' . $value;
                     }, $request->except('page'), array_keys($request->except('page')));
-                    $this->path = $request->url() . '?';
+
+                    $newCollect = collect(['data' => $this]);
+                    
+                    $path = $request->url() . '?';
                     if (!empty($queryString)) {
-                        $this->path = $this->path . implode('&', $queryString) . '&';
+                        $path = $path.implode('&', $queryString).'&';
                     }
+                    data_set($newCollect, 'path', $path);
+                    data_set($newCollect, 'prev_page_url', ($actualPage > 1) ? $path . 'page=' . ($actualPage - 1) : '');
+                    data_set($newCollect, 'next_page_url', (count(data_get($newCollect, 'data')) == $perPage) ? $path . 'page=' . ($actualPage + 1) : '');
             
-                    $this->prev_page_url = ($actualPage > 1) ? $this->path . 'page=' . ($actualPage - 1) : '';
-                    $this->next_page_url = ($this->count() == $perPage) ? $this->path . 'page=' . ($actualPage + 1) : '';
-            
-                    $this->macro('links', function () {
+                    $newCollect->macro('links', function () {
                         return view('includes.pagination', ['data' => $this, 'show_page_links' => false]);
                     });
-                    return $this;
+                    return $newCollect;
                 }
             );
         }

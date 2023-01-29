@@ -95,7 +95,7 @@
                                 <th>Country</th>
                                 <th>Region</th>
                             </tr>
-                            @forelse ($countries['data'] as $code => $country)
+                            @forelse (data_get($countries, 'data.data') as $code => $country)
                             <tr>
                                 @if (request('with_flag') == 'With Flags')
                                 <td><img loading="lazy" class="flag" crossorigin="anonymous" src="{{config('custom.FlagsImgUrl')}}/{{$code}}" /></td>
