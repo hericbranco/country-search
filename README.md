@@ -5,9 +5,10 @@
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 
-CountriesListSearch is a PHP(Laravel) project to show and filter countries and their flags.
+CountriesListSearch is a PHP([Laravel](https://laravel.com/)) project to show and filter countries and their flags.
 
-The project uses Redis to cache http requests to avoid slowdowns in country api calls
+The project uses [Redis](https://redis.io/) to cache http requests to avoid slowdowns in country api calls, [Bootstrap](https://getbootstrap.com/) to create a datagrid and HomePage and [Docker](https://www.docker.com/) to implement 
+local development environment.
 
 ## Installation
 
